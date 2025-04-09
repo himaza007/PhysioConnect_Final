@@ -18,48 +18,84 @@ class FeatureList extends StatelessWidget {
       "assets/icons/10.png",
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 1,
-        ),
-        itemCount: featureIcons.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Feature ${index + 1} coming soon!'),
-                  duration: Duration(seconds: 1),
-                ),
-              ),
-            child: Container(
-              decoration: BoxDecoration(
-                // ignore: deprecated_member_use
-                color: Color(0xFF33724B).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  // ignore: deprecated_member_use
-                  color: Color(0xFF33724B).withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  featureIcons[index],
-                  color: Color(0xFF33724B),
-                ),
+    final List<String> featureNames = [
+      "Nearby Facility Locator",
+      "Progress Tracking",
+      "Pain Monitoring",
+      "EPHR",
+      "2D Model Pain Mapping",
+      "Tokens",
+      "Exercise Plans",
+      "First Aid Tutorials",
+      "Educational Resources",
+      "Injury Remedies",
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 15,
+        mainAxisSpacing: 15,
+        childAspectRatio: 1.2,
+      ),
+      itemCount: featureIcons.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${featureNames[index]} feature coming soon!'),
+                duration: const Duration(seconds: 1),
               ),
             ),
-          );
-        },
-      ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: const Color(0xFF33724B).withOpacity(0.3),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF33724B).withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    featureIcons[index],
+                    color: Colors.white,
+                    width: 70,
+                    height: 70,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  featureNames[index],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

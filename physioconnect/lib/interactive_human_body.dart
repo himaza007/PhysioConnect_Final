@@ -6,10 +6,10 @@ class InteractiveHumanBody extends StatefulWidget {
   final bool isDarkMode;
 
   const InteractiveHumanBody({
-    Key? key, 
+    super.key, 
     required this.toggleTheme, 
     required this.isDarkMode
-  }) : super(key: key);
+  });
 
   @override
   State<InteractiveHumanBody> createState() => _InteractiveHumanBodyState();
@@ -86,65 +86,89 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.isDarkMode 
-        ? const Color(0xFF121212) 
-        : const Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Advanced App Bar
-            _buildAdvancedAppBar(),
-            
-            // View and Gender Selection
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildViewChips(),
-                  _buildGenderToggle(),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          // Background Image
+          Image.asset(
+            'assets/bg.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          
+          // Overlay for better readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.7),
                 ],
               ),
             ),
-
-            // Expandable Body Visualization
-            Expanded(
-              flex: 3,
-              child: Stack(
-                children: [
-                  // Interactive Body Visualization
-                  Center(
-                    child: _buildBodyVisualization(),
+          ),
+          
+          // Main Content
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Advanced App Bar
+                _buildAdvancedAppBar(),
+                
+                // View and Gender Selection
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildViewChips(),
+                      _buildGenderToggle(),
+                    ],
                   ),
-                  
-                  // Gradient Overlay
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              widget.isDarkMode 
-                                ? Colors.black.withOpacity(0.3)
-                                : Colors.black.withOpacity(0.1),
-                            ],
+                ),
+
+                // Expandable Body Visualization
+                Expanded(
+                  flex: 3,
+                  child: Stack(
+                    children: [
+                      // Interactive Body Visualization
+                      Center(
+                        child: _buildBodyVisualization(),
+                      ),
+                      
+                      // Gradient Overlay
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.2),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
 
-            // Advanced Body Part Selector
-            _buildAdvancedBodyPartSelector(),
-          ],
-        ),
+                // Advanced Body Part Selector
+                _buildAdvancedBodyPartSelector(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -158,23 +182,21 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
           Row(
             children: [
               Text(
-                'PhysioConnect',
+                '2D MODEL',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
-                  color: widget.isDarkMode ? Colors.white70 : Colors.black87,
+                  color: Colors.white.withOpacity(0.9),
                   letterSpacing: 0.5,
                 ),
               ),
               const SizedBox(width: 8),
               Text(
-                'Pro',
+                'PhysioConnect',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: widget.isDarkMode 
-                    ? Colors.tealAccent 
-                    : Colors.teal.shade700,
+                  color: const Color.fromARGB(255, 41, 95, 46),
                   letterSpacing: 0.5,
                 ),
               ),
@@ -183,9 +205,9 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
           Row(
             children: [
               // Notification Icon
-              Icon(
+              const Icon(
                 Icons.notifications_outlined,
-                color: widget.isDarkMode ? Colors.white70 : Colors.black87,
+                color: Colors.white,
                 size: 28,
               ),
               const SizedBox(width: 16),
@@ -195,14 +217,12 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: widget.isDarkMode 
-                      ? Colors.white12 
-                      : Colors.black12,
+                    color: Colors.white12,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     widget.isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-                    color: widget.isDarkMode ? Colors.white70 : Colors.black87,
+                    color: Colors.white,
                     size: 24,
                   ),
                 ),
@@ -241,27 +261,21 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: widget.isDarkMode 
-            ? Colors.white12 
-            : Colors.black12,
+          color: Colors.white12,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           children: [
             Icon(
               isMale ? Icons.male : Icons.female,
-              color: widget.isDarkMode 
-                ? (isMale ? Colors.blueAccent : Colors.pinkAccent)
-                : (isMale ? Colors.blue : Colors.pink),
+              color: isMale ? Colors.blueAccent : Colors.pinkAccent,
               size: 24,
             ),
             const SizedBox(width: 8),
             Text(
               isMale ? 'Male' : 'Female',
               style: TextStyle(
-                color: widget.isDarkMode 
-                  ? Colors.white70 
-                  : Colors.black87,
+                color: Colors.white.withOpacity(0.9),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -271,14 +285,14 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
     );
   }
 
-    Widget _buildBodyVisualization() {
+  Widget _buildBodyVisualization() {
     // Placeholder for body visualization
     // You can replace this with your actual body visualization method
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
-        color: widget.isDarkMode ? Colors.black26 : Colors.grey[200],
+        color: Colors.black26,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -320,21 +334,17 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected 
-            ? (widget.isDarkMode ? const Color(0xFF2C2C2C) : Colors.blue.shade50)
-            : Colors.transparent,
+              ? const Color(0xFF2C2C2C).withOpacity(0.7)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected 
-              ? (widget.isDarkMode ? Colors.white24 : Colors.blue.shade100)
-              : Colors.transparent,
+            color: isSelected ? Colors.white24 : Colors.transparent,
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected 
-              ? (widget.isDarkMode ? Colors.white : Colors.blue)
-              : (widget.isDarkMode ? Colors.white70 : Colors.black54),
+            color: isSelected ? Colors.white : Colors.white70,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -347,9 +357,7 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: widget.isDarkMode 
-          ? const Color(0xFF1E1E1E) 
-          : Colors.white,
+        color: Colors.black.withOpacity(0.5),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
@@ -377,10 +385,8 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
       child: ElevatedButton(
         onPressed: () => navigateToMainBodyPart(bodyPart),
         style: ElevatedButton.styleFrom(
-          backgroundColor: widget.isDarkMode 
-            ? Colors.white12 
-            : Colors.black12,
-          foregroundColor: widget.isDarkMode ? Colors.white70 : Colors.black87,
+          backgroundColor: const Color(0xFF33724B),
+          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
