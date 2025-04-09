@@ -3,23 +3,25 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key}); // Use super parameters
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState(); // Make the State class public
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  Future<void> _login(BuildContext context) async {
+  Future<void> _login() async {
     // Validate inputs
     if (_emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
+      // Check mounted before using context
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email and password are required')),
+        const SnackBar(content: Text('Email and password are required')),
       );
       return;
     }
@@ -32,32 +34,43 @@ class _LoginPageState extends State<LoginPage> {
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
 
+      // Make the async request
       final response = await http.post(
         Uri.parse('http://10.0.2.2:5000/api/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
+      // Immediately check if we're still mounted after the async gap
+      if (!mounted) return;
 
       final responseBody = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
+        // Double check we're still mounted
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'] ?? 'Login successful')),
         );
 
-        // Navigate to AppCoordinator instead of HomePage
+        // Check one more time before navigation
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/home');
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),
         );
       }
-
     } catch (e) {
+      // Check mounted before using context
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Network error: ${e.toString()}')),
       );
     } finally {
+      // Safely stop loading spinner
+      // ignore: control_flow_in_finally
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -68,8 +81,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF33724B),
-        title: Text('Login', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF33724B),
+        title: const Text('Login', style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -78,34 +91,34 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 prefixIcon: Icon(Icons.email),
               ),
               keyboardType: TextInputType.emailAddress,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 prefixIcon: Icon(Icons.lock),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             _isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: () => _login(context),
-                    child: Text('Login', style: TextStyle(fontSize: 18)),
+                    onPressed: _login, // Call _login without passing BuildContext
+                    child: const Text('Login', style: TextStyle(fontSize: 18)),
                   ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/signup');
               },
-              child: Text(
+              child: const Text(
                 "Don't have an account? Sign up here",
                 style: TextStyle(fontSize: 16),
               ),

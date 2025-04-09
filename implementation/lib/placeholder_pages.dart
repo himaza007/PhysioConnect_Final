@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Calendar Page
 class CalendarPage extends StatelessWidget {
-  const CalendarPage({Key? key}) : super(key: key);
+  const CalendarPage({super.key}); // Use the super.key parameter
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class CalendarPage extends StatelessWidget {
 
 // Notifications Page
 class NotificationsPage extends StatelessWidget {
-  const NotificationsPage({Key? key}) : super(key: key);
+  const NotificationsPage({super.key}); // Use the super.key parameter
 
   @override
   Widget build(BuildContext context) {
