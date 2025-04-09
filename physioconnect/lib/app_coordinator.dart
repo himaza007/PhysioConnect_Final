@@ -22,7 +22,7 @@ class _AppCoordinatorState extends State<AppCoordinator> {
   ];
 
   final List<String> _titles = [
-    'PhysioConnect',
+    '', // Empty string for homepage since it has its own title
     'Calendar',
     'Notifications'
   ];
@@ -44,39 +44,68 @@ class _AppCoordinatorState extends State<AppCoordinator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _titles[_currentIndex],
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+      // Add background image to scaffold
+      extendBodyBehindAppBar: true,
+      appBar: _currentIndex == 0 
+        ? null // Don't show app bar on home page to avoid duplicate titles
+        : AppBar(
+            title: Text(
+              _titles[_currentIndex],
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+            backgroundColor: const Color(0xFF33724B),
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: Icon(_headerIcons[0], color: Colors.white),
+                onPressed: () {
+                  // Profile action
+                },
+              ),
+              IconButton(
+                icon: Icon(_headerIcons[1], color: Colors.white),
+                onPressed: () {
+                  // Help action
+                },
+              ),
+              IconButton(
+                icon: Icon(_headerIcons[2], color: Colors.white),
+                onPressed: () {
+                  // Settings action
+                },
+              ),
+            ],
           ),
-        ),
-        backgroundColor: const Color(0xFF33724B),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(_headerIcons[0], color: Colors.white),
-            onPressed: () {
-              // Profile action
-            },
+      body: Stack(
+        children: [
+          // Background image applied to all pages
+          Image.asset(
+            'assets/images/bg.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
-          IconButton(
-            icon: Icon(_headerIcons[1], color: Colors.white),
-            onPressed: () {
-              // Help action
-            },
+          // Overlay for better readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.6),
+                ],
+              ),
+            ),
           ),
-          IconButton(
-            icon: Icon(_headerIcons[2], color: Colors.white),
-            onPressed: () {
-              // Settings action
-            },
-          ),
+          // Page content
+          _pages[_currentIndex],
         ],
       ),
-      body: _pages[_currentIndex],
       bottomNavigationBar: PhysioBottomAppBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
