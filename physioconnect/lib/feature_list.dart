@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'progress_tracking_screen.dart';
+import 'nearby_facilities.dart';
 
 class FeatureList extends StatelessWidget {
   const FeatureList({super.key});
@@ -46,24 +47,30 @@ class FeatureList extends StatelessWidget {
       itemCount: featureIcons.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-    
-        onTap: () {
-          if (index == 1) { // ✅ Progress Tracking index
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AdvancedProgressTrackingScreen(),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${featureNames[index]} feature coming soon!'),
-                duration: const Duration(seconds: 1),
-              ),
-            );
-          }
-},
+          onTap: () {
+            if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AdvancedProgressTrackingScreen(),
+                ),
+              );
+            } else if (index == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NearbyFacilitiesScreen(),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${featureNames[index]} feature coming soon!'),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+            }
+          },
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
