@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, duplicate_ignore
+
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -14,6 +16,7 @@ class AppTheme {
     colorScheme: ColorScheme.dark(
       primary: primaryTeal,
       secondary: aliceBlue,
+      // ignore: deprecated_member_use
       background: darkBackground,
     ),
     appBarTheme: AppBarTheme(

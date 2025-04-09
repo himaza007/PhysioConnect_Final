@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class SelectedMusclesPage extends StatelessWidget {
@@ -6,11 +8,11 @@ class SelectedMusclesPage extends StatelessWidget {
   final bool isDarkMode;
 
   const SelectedMusclesPage({
-    Key? key,
+    super.key,
     required this.selectedBodyParts,
     required this.selectedMuscles,
-    required this.isDarkMode,
-  }) : super(key: key);
+    required this.isDarkMode, required String bodyPart, required Null Function(dynamic selectedBodyParts, dynamic selectedMuscles) onSelectionComplete,
+  });
 
   @override
   Widget build(BuildContext context) {

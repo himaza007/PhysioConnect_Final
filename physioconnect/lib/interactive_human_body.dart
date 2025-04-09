@@ -1,5 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'main_body_part_page.dart';
+import 'bottom_app_bar.dart';
 
 class InteractiveHumanBody extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -18,6 +21,7 @@ class InteractiveHumanBody extends StatefulWidget {
 class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with SingleTickerProviderStateMixin {
   String currentView = 'front';
   bool isMale = true;
+  int _currentNavIndex = 0; // For bottom navigation
   
   // Animation controller for sophisticated animations
   late AnimationController _animationController;
@@ -83,11 +87,33 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
     );
   }
 
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _currentNavIndex = index;
+    });
+    // In a real app, you might want to handle navigation here
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.3),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: Stack(
         children: [
           // Background Image
@@ -169,6 +195,10 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> with Single
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }

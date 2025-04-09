@@ -1,304 +1,108 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'selected_muscles_page.dart';
+import 'bottom_app_bar.dart';
 
-class MuscleSelectionPage extends StatefulWidget {
-  final String bodyPart;
+class SelectedMusclesPage extends StatefulWidget {
+  final List<String> selectedBodyParts;
+  final List<String> selectedMuscles;
   final bool isDarkMode;
-  final List<String> previouslySelectedBodyParts;
-  final List<String> previouslySelectedMuscles;
-  final Function(List<String>, List<String>) onSelectionComplete;
 
-  const MuscleSelectionPage({
+  // ignore: use_super_parameters
+  const SelectedMusclesPage({
     Key? key,
-    required this.bodyPart,
+    required this.selectedBodyParts,
+    required this.selectedMuscles,
     required this.isDarkMode,
-    this.previouslySelectedBodyParts = const [],
-    this.previouslySelectedMuscles = const [],
-    required this.onSelectionComplete,
   }) : super(key: key);
 
   @override
-  State<MuscleSelectionPage> createState() => _MuscleSelectionPageState();
+  State<SelectedMusclesPage> createState() => _SelectedMusclesPageState();
 }
 
-class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
-  List<String> selectedMuscles = [];
-  late List<String> previousBodyParts;
-  late List<String> previousMuscles;
+class _SelectedMusclesPageState extends State<SelectedMusclesPage> {
+  int _currentNavIndex = 0; // For bottom navigation
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize with previously selected muscles and body parts
-    selectedMuscles = List.from(widget.previouslySelectedMuscles);
-    previousBodyParts = List.from(widget.previouslySelectedBodyParts);
-    
-    // Add current body part if not already in the list
-    if (!previousBodyParts.contains(widget.bodyPart)) {
-      previousBodyParts.add(widget.bodyPart);
-    }
-  }
-
-  // Updated muscle data with comprehensive lists
-  final Map<String, List<String>> muscleData = {
-    "Head": [
-      "Clavicular Head of Sternocleidomastoid",
-      "Orbicularis Oculi",
-      "Temporalis Muscle",
-      "Masseter Muscle",
-      "Platysma Muscle",
-      "Zygomaticus Major",
-      "Frontalis Muscle",
-      "Occipitalis Muscle",
-    ],
-    "Chest": [
-      "Pectoralis Major",
-      "Pectoralis Minor",
-      "Serratus Anterior",
-      "Intercostal Muscles",
-    ],
-    "Abdomen": [
-      "Rectus Abdominis",
-      "External Oblique",
-      "Internal Oblique",
-      "Transversus Abdominis",
-    ],
-    "Arms": [
-      "Biceps Brachii",
-      "Triceps Brachii",
-      "Deltoid",
-      "Brachialis",
-      "Forearm Muscles",
-    ],
-    "Legs": [
-      "Quadriceps",
-      "Hamstrings",
-      "Calves",
-      "Glutes",
-    ],
-    "Upper Back": [
-      "Trapezius",
-      "Rhomboids",
-      "Latissimus Dorsi",
-      "Infraspinatus",
-    ],
-    "Lower Back": [
-      "Erector Spinae",
-      "Quadratus Lumborum",
-      "Multifidus",
-    ],
-    "Shoulders": [
-      "Rotator Cuff Muscles",
-      "Deltoid",
-      "Supraspinatus",
-    ],
-    "Glutes": [
-      "Gluteus Maximus",
-      "Gluteus Medius",
-      "Gluteus Minimus",
-    ],
-    "Hamstrings": [
-      "Biceps Femoris",
-      "Semitendinosus",
-      "Semimembranosus",
-    ],
-  };
-
-  String getMuscleImagePath(String bodyPart, int index) {
-    final folderMap = {
-      "Head": "Head",
-      "Chest": "Area2",
-      "Abdomen": "abdomen",
-      "Arms": "Area4",
-      "Legs": "Area3",
-      "Upper Back": "back_muscles",
-      "Lower Back": "back_muscles",
-      "Shoulders": "Area2",
-      "Glutes": "Area3",
-      "Hamstrings": "Area3",
-    };
-
-    final folder = folderMap[bodyPart] ?? "Head";
-    // Ensure index is within range
-    final safeIndex = index % 10 + 1;
-    return 'assets/body_parts/$folder/muscles/$safeIndex.avif';
-  }
-
-  void toggleMuscleSelection(String muscle) {
+  void _onNavItemTapped(int index) {
     setState(() {
-      if (selectedMuscles.contains(muscle)) {
-        selectedMuscles.remove(muscle);
-      } else {
-        selectedMuscles.add(muscle);
-      }
+      _currentNavIndex = index;
     });
-  }
-
-  void proceedToNextBodyPart() {
-    // If no muscles selected for current body part, show a warning
-    if (selectedMuscles.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one muscle'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    // Show a modal to choose the next body part
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        // Filter out already selected body parts
-        final availableBodyParts = [
-          'Head', 'Chest', 'Abdomen', 'Arms', 'Legs', 
-          'Upper Back', 'Lower Back', 'Shoulders', 'Glutes', 'Hamstrings'
-        ].where((part) => !previousBodyParts.contains(part)).toList();
-
-        return ListView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Select Next Body Part',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ...availableBodyParts.map((bodyPart) => ListTile(
-                  title: Text(bodyPart),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MuscleSelectionPage(
-                          bodyPart: bodyPart,
-                          isDarkMode: widget.isDarkMode,
-                          previouslySelectedBodyParts: previousBodyParts,
-                          previouslySelectedMuscles: selectedMuscles,
-                          onSelectionComplete: widget.onSelectionComplete,
-                        ),
-                      ),
-                    );
-                  },
-                )).toList(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Finish selection and go to selected muscles page
-                  Navigator.pop(context);
-                  widget.onSelectionComplete(previousBodyParts, selectedMuscles);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SelectedMusclesPage(
-                        selectedBodyParts: previousBodyParts,
-                        selectedMuscles: selectedMuscles,
-                        isDarkMode: widget.isDarkMode,
-                      ),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF33724B),
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                ),
-                child: const Text(
-                  'Finish Muscle Selection',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    // In a real app, you might want to handle navigation here
   }
 
   @override
   Widget build(BuildContext context) {
-    final muscles = muscleData[widget.bodyPart] ?? [];
-
-    // Handle case with no muscles
-    if (muscles.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('${widget.bodyPart} Muscles'),
-          backgroundColor: const Color(0xFF33724B),
-        ),
-        body: Center(
-          child: Text(
-            'No muscles found for ${widget.bodyPart}',
-            style: const TextStyle(fontSize: 18),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: widget.isDarkMode 
         ? const Color(0xFF06130D) 
         : const Color(0xFFEAF7FF),
       appBar: AppBar(
         backgroundColor: const Color(0xFF33724B),
-        title: Text(
-          '${widget.bodyPart} Muscles',
-          style: const TextStyle(
+        title: const Text(
+          'Selected Muscles',
+          style: TextStyle(
             fontSize: 22, 
             fontWeight: FontWeight.w600, 
             color: Colors.white
           ),
         ),
-        actions: [
-          if (selectedMuscles.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Chip(
-                label: Text(
-                  '${selectedMuscles.length} Selected',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                backgroundColor: const Color(0xFF1F5F3A),
-              ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.2),
+              shape: BoxShape.circle,
             ),
-        ],
+            child: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Column(
         children: [
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.8,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Body Parts: ${widget.selectedBodyParts.join(", ")}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              itemCount: muscles.length,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: widget.selectedMuscles.length,
               itemBuilder: (context, index) {
-                final muscle = muscles[index];
-                final imagePath = getMuscleImagePath(widget.bodyPart, index);
-                
-                return _buildMuscleCard(
-                  muscle: muscle, 
-                  imagePath: imagePath,
-                  isSelected: selectedMuscles.contains(muscle),
-                  onTap: () => toggleMuscleSelection(muscle),
+                return Card(
+                  color: const Color(0xFF33724B).withOpacity(0.1),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    title: Text(
+                      widget.selectedMuscles[index],
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.check_circle,
+                      color: Color(0xFF33724B),
+                    ),
+                  ),
                 );
               },
             ),
           ),
-          // Proceed to Next Body Part or Finish Button
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
-              onPressed: proceedToNextBodyPart,
+              onPressed: () {
+                // You can add further actions here, like saving or processing muscles
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF33724B),
                 padding: const EdgeInsets.symmetric(
@@ -309,11 +113,9 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text(
-                selectedMuscles.isEmpty 
-                  ? 'Select Muscles' 
-                  : 'Next Body Part (${selectedMuscles.length} Selected)',
-                style: const TextStyle(
+              child: const Text(
+                'Finish',
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -322,94 +124,9 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
           ),
         ],
       ),
-    );
-  }
-
-  // Reuse existing _buildMuscleCard method from previous implementation
-  Widget _buildMuscleCard({
-    required String muscle, 
-    required String imagePath, 
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: isSelected 
-            ? const Color(0xFF33724B).withOpacity(0.2)
-            : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-          border: Border.all(
-            color: isSelected 
-              ? const Color(0xFF33724B) 
-              : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 3,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(18),
-                ),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    print('Error loading image: $imagePath');
-                    return const Center(
-                      child: Icon(
-                        Icons.broken_image, 
-                        color: Colors.grey, 
-                        size: 50
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        muscle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected 
-                            ? const Color(0xFF33724B) 
-                            : Colors.black87,
-                        ),
-                      ),
-                    ),
-                    Checkbox(
-                      value: isSelected,
-                      onChanged: (_) => onTap(),
-                      activeColor: const Color(0xFF33724B),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }

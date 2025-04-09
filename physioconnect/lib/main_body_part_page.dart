@@ -1,45 +1,75 @@
-import 'package:flutter/material.dart';
-import 'muscle_selection_page.dart';
+// ignore_for_file: deprecated_member_use, duplicate_ignore
 
-class MainBodyPartPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'bottom_app_bar.dart';
+import 'selected_muscles_page.dart';
+
+class MainBodyPartPage extends StatefulWidget {
   final String bodyPart;
   final bool isDarkMode;
 
   const MainBodyPartPage({
-    Key? key,
+    super.key,
     required this.bodyPart,
     required this.isDarkMode,
-  }) : super(key: key);
+  });
 
+  @override
+  State<MainBodyPartPage> createState() => _MainBodyPartPageState();
+}
+
+class _MainBodyPartPageState extends State<MainBodyPartPage> {
+  int _currentNavIndex = 0; // For bottom navigation
+  
   void navigateToMuscles(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MuscleSelectionPage(
-          bodyPart: bodyPart,
-          isDarkMode: isDarkMode,
+        builder: (context) => SelectedMusclesPage(
+          bodyPart: widget.bodyPart,
+          isDarkMode: widget.isDarkMode,
           onSelectionComplete: (selectedBodyParts, selectedMuscles) {
             // You can handle selection result here if needed
-          },
+          }, selectedBodyParts: [], selectedMuscles: [],
         ),
       ),
     );
   }
 
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _currentNavIndex = index;
+    });
+    // In a real app, you might want to handle navigation here
+  }
+
   @override
   Widget build(BuildContext context) {
-    String imagePath = 'assets/body_parts/body_part_${bodyPart.toLowerCase()}.avif';
+    String imagePath = 'assets/body_parts/body_part_${widget.bodyPart.toLowerCase()}.avif';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        // ignore: deprecated_member_use
         backgroundColor: const Color(0xFF1F5F3A).withOpacity(0.8),
         elevation: 0,
         title: Text(
-          bodyPart,
+          widget.bodyPart,
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              // ignore: deprecated_member_use
+              color: Colors.black.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Stack(
         children: [
@@ -58,7 +88,9 @@ class MainBodyPartPage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
+                  // ignore: deprecated_member_use
                   Colors.black.withOpacity(0.5),
+                  // ignore: deprecated_member_use
                   Colors.black.withOpacity(0.7),
                 ],
               ),
@@ -74,10 +106,12 @@ class MainBodyPartPage extends StatelessWidget {
                     padding: const EdgeInsets.all(18),
                     child: Container(
                       decoration: BoxDecoration(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.3),
                             blurRadius: 15,
                             spreadRadius: 2,
@@ -90,7 +124,6 @@ class MainBodyPartPage extends StatelessWidget {
                         fit: BoxFit.contain,
                         width: double.infinity,
                         errorBuilder: (context, error, stackTrace) {
-                          print('Error loading image: $imagePath');
                           return const Center(
                             child: Icon(
                               Icons.broken_image,
@@ -132,6 +165,10 @@ class MainBodyPartPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }
