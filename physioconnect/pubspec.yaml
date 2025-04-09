@@ -130,6 +130,9 @@ flutter:
     - assets/body_parts/Chest and Upper Back/muscles/
     - assets/body_parts/abdomen/muscles/
 
+    - assets/app_logo.png
+    - assets/videos/vid.mp4
+
 
   fonts:
     - family: Poppins

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key}); // Use super parameters
+  const LoginPage({super.key});
 
   @override
-  LoginPageState createState() => LoginPageState(); // Make the State class public
+  LoginPageState createState() => LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
@@ -14,67 +12,28 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  Future<void> _login() async {
-    // Validate inputs
-    if (_emailController.text.trim().isEmpty ||
-        _passwordController.text.trim().isEmpty) {
-      // Check mounted before using context
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email and password are required')),
-      );
-      return;
-    }
-
+  // Simplified login without API calls
+  void _login() {
     setState(() {
       _isLoading = true;
     });
 
-    try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-
-      // Make the async request
-      final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
-      // Immediately check if we're still mounted after the async gap
+    // Simulate a delay to show loading indicator
+    Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
-
-      final responseBody = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        // Double check we're still mounted
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseBody['message'] ?? 'Login successful')),
-        );
-
-        // Check one more time before navigation
-        if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),
-        );
-      }
-    } catch (e) {
-      // Check mounted before using context
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Network error: ${e.toString()}')),
-      );
-    } finally {
-      // Safely stop loading spinner
-      // ignore: control_flow_in_finally
-      if (!mounted) return;
+      
       setState(() {
         _isLoading = false;
       });
-    }
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful!')),
+      );
+      
+      // Navigate to home page
+      Navigator.pushReplacementNamed(context, '/home');
+    });
   }
 
   @override
@@ -110,7 +69,7 @@ class LoginPageState extends State<LoginPage> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: _login, // Call _login without passing BuildContext
+                    onPressed: _login,
                     child: const Text('Login', style: TextStyle(fontSize: 18)),
                   ),
             const SizedBox(height: 8),

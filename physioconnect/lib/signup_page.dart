@@ -1,85 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key}); // Use super parameters
+  const SignupPage({super.key});
 
   @override
-  SignupPageState createState() => SignupPageState(); // Make this public
+  SignupPageState createState() => SignupPageState();
 }
 
 class SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _selectedGender = 'Male'; // Default to 'Male'
+  String? _selectedGender = 'Male';
   bool _isLoading = false;
 
-  Future<void> _signup() async {
-    // Validate inputs
-    if (_nameController.text.trim().isEmpty ||
-        _emailController.text.trim().isEmpty ||
-        _passwordController.text.trim().isEmpty) {
-      if (!mounted) return; // Check before using context
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All fields are required')),
-      );
-      return;
-    }
-
+  // Simplified signup without API calls
+  void _signup() {
     setState(() {
       _isLoading = true;
     });
 
-    try {
-      final name = _nameController.text.trim();
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-      final gender = _selectedGender ?? 'Male';
-
-      // Perform asynchronous signup call
-      final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/auth/signup'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'password': password,
-          'gender': gender,
-        }),
-      );
-
-      if (!mounted) return; // Check again after async gap
-
-      final responseBody = jsonDecode(response.body);
-
-      if (response.statusCode == 201) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseBody['message'] ?? 'Sign up successful')),
-        );
-        // Another check before navigation
-        if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/login');
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseBody['message'] ?? 'Sign up failed')),
-        );
-      }
-    } catch (e) {
+    // Simulate a delay to show loading indicator
+    Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Network error: $e')),
-      );
-    } finally {
-      // ignore: control_flow_in_finally
-      if (!mounted) return;
+      
       setState(() {
         _isLoading = false;
       });
-    }
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign up successful!')),
+      );
+      
+      // Navigate to login page
+      Navigator.pushReplacementNamed(context, '/login');
+    });
   }
 
   @override

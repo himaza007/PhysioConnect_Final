@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'feature_list.dart'; // ✅ Make sure this file exists
+import 'feature_list.dart';
+import 'interactive_human_body.dart'; // Import the interactive human body page
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late VideoPlayerController _controller;
   bool _isVideoInitialized = false;
+  bool _isDarkMode = false; // Add dark mode state
 
   @override
   void initState() {
@@ -34,6 +36,12 @@ class _HomePageState extends State<HomePage> {
           _isVideoInitialized = false;
         });
       });
+  }
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
   }
 
   @override
@@ -124,7 +132,16 @@ class _HomePageState extends State<HomePage> {
                         elevation: 5,
                       ),
                       onPressed: () {
-                        // Navigate to 2D Body Model
+                        // Navigate to the 2D Body Model
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InteractiveHumanBody(
+                              toggleTheme: _toggleTheme,
+                              isDarkMode: _isDarkMode,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),

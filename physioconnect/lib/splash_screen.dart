@@ -79,7 +79,7 @@ class SplashScreenState extends State<SplashScreen>
                   ],
                 ),
                 child: Image.asset(
-                  "/assets/images/app_logo.png",
+                  "/assets/app_logo.png",
                   width: 140,
                 ),
               ),
