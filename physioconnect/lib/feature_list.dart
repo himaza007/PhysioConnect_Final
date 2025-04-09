@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'progress_tracking_screen.dart';
 
 class FeatureList extends StatelessWidget {
   const FeatureList({super.key});
@@ -45,12 +46,24 @@ class FeatureList extends StatelessWidget {
       itemCount: featureIcons.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+    
+        onTap: () {
+          if (index == 1) { // ✅ Progress Tracking index
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdvancedProgressTrackingScreen(),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('${featureNames[index]} feature coming soon!'),
                 duration: const Duration(seconds: 1),
               ),
-            ),
+            );
+          }
+},
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),

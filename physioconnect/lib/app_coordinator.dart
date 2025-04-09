@@ -315,7 +315,7 @@ class _AppCoordinatorState extends State<AppCoordinator> {
         children: [
           // Background image applied to all pages
           Image.asset(
-            'assets/images/bg.jpg',
+            'assets/bg.jpg',
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
