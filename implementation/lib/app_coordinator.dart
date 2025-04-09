@@ -5,7 +5,7 @@ import 'home_page.dart';
 import 'placeholder_pages.dart';
 
 class AppCoordinator extends StatefulWidget {
-  const AppCoordinator({Key? key}) : super(key: key);
+  const AppCoordinator({super.key});
 
   @override
   State<AppCoordinator> createState() => _AppCoordinatorState();

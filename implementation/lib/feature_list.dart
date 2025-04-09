@@ -32,9 +32,12 @@ class FeatureList extends StatelessWidget {
         itemCount: featureIcons.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              // TODO: Implement navigation
-            },
+            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Feature ${index + 1} coming soon!'),
+                  duration: Duration(seconds: 1),
+                ),
+              ),
             child: Container(
               decoration: BoxDecoration(
                 // ignore: deprecated_member_use

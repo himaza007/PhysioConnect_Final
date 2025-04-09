@@ -5,10 +5,10 @@ class PhysioBottomAppBar extends StatelessWidget {
   final Function(int) onTap;
 
   const PhysioBottomAppBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +17,7 @@ class PhysioBottomAppBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
@@ -71,6 +72,7 @@ class PhysioBottomAppBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected 
+              // ignore: deprecated_member_use
               ? const Color(0xFF33724B).withOpacity(0.1) 
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
@@ -114,6 +116,7 @@ class PhysioBottomAppBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.red.withOpacity(0.2),
               blurRadius: 8,
               offset: const Offset(0, 2),
@@ -235,9 +238,11 @@ class PhysioBottomAppBar extends StatelessWidget {
         width: 100,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
+          // ignore: deprecated_member_use
           color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
+            // ignore: deprecated_member_use
             color: color.withOpacity(0.3),
             width: 1,
           ),

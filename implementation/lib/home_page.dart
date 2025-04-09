@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'PhysioConnect',
           style: TextStyle(
             color: Colors.white,
@@ -54,11 +54,11 @@ class _HomePageState extends State<HomePage> {
             fontSize: 22,
           ),
         ),
-        backgroundColor: Color(0xFF33724B),
+        backgroundColor: const Color(0xFF33724B),
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications_outlined, color: Colors.white),
+            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
             onPressed: () {
               // Notifications functionality
             },
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
             // Video Section with Enhanced UI
             Container(
               height: 300,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.black, Colors.black],
                   begin: Alignment.topLeft,
@@ -101,14 +101,14 @@ class _HomePageState extends State<HomePage> {
                               child: VideoPlayer(_controller),
                             ),
                           )
-                        : CircularProgressIndicator(color: Colors.white),
+                        : const CircularProgressIndicator(color: Colors.white),
                   ),
                   Positioned(
                     right: 20,
                     bottom: 20,
                     child: ElevatedButton.icon(
-                      icon: Icon(Icons.play_arrow, color: Colors.white),
-                      label: Text(
+                      icon: const Icon(Icons.play_arrow, color: Colors.white),
+                      label: const Text(
                         "Body Model",
                         style: TextStyle(
                           color: Colors.white,
@@ -116,8 +116,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF1E4D33),
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        backgroundColor: const Color(0xFF1E4D33),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -131,11 +131,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             // Enhanced Feature List
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 "Heal Smart.",
                 style: TextStyle(
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             const FeatureList(),
           ],
         ),
