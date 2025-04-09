@@ -115,10 +115,22 @@ flutter:
     - assets/body_parts/Head/muscles/22.avif
     - assets/body_parts/Head/muscles/23.avif
 
+    - assets/icons/1.png
+    - assets/icons/2.png
+    - assets/icons/3.png
+    - assets/icons/4.png
+    - assets/icons/5.png
+    - assets/icons/6.png
+    - assets/icons/7.png
+    - assets/icons/8.png
+    - assets/icons/9.png
+    - assets/icons/10.png
+
     # ✅ Additional body part folders (recursive)
     - assets/body_parts/Head/muscles/
     - assets/body_parts/Chest and Upper Back/muscles/
     - assets/body_parts/abdomen/muscles/
+
 
   fonts:
     - family: Poppins
