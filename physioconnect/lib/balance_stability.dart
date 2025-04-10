@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
 
 class BalanceStabilityScreen extends StatefulWidget {
   const BalanceStabilityScreen({super.key});
@@ -19,6 +18,8 @@ class _BalanceStabilityScreenState extends State<BalanceStabilityScreen> {
   }
 
   Future<void> fetchBalanceWorkouts() async {
+    // Comment out HTTP request and use mock data
+    /*
     final uri = Uri.parse('http://localhost:5000/api/balance-workouts'); // Use actual IP on real device
     try {
       final response = await http.get(uri);
@@ -28,11 +29,49 @@ class _BalanceStabilityScreenState extends State<BalanceStabilityScreen> {
           workouts = data;
         });
       } else {
-        print("Failed to load balance workouts: ${response.statusCode}");
+        if (kDebugMode) {
+          if (kDebugMode) {
+            print("Failed to load balance workouts: ${response.statusCode}");
+          }
+        }
       }
     } catch (e) {
-      print("Error fetching balance workouts: $e");
+      if (kDebugMode) {
+        print("Error fetching balance workouts: $e");
+      }
     }
+    */
+    
+    // Use mock data instead
+    setState(() {
+      workouts = [
+        {
+          "title": "Single Leg Stand",
+          "description": "Improves balance and stability by focusing on one leg at a time.",
+          "instructions": "Stand on one foot for 30 seconds, then switch. Try to maintain proper posture throughout."
+        },
+        {
+          "title": "Balance Board Exercises",
+          "description": "Challenges your stability using an unstable surface.",
+          "instructions": "Start with 30 seconds of balancing, gradually increase to 60 seconds as ability improves."
+        },
+        {
+          "title": "Heel-to-Toe Walk",
+          "description": "Improves balance and coordination with controlled movement.",
+          "instructions": "Walk in a straight line, placing the heel of one foot directly in front of the toes of the other foot."
+        },
+        {
+          "title": "Standing Yoga Poses",
+          "description": "Tree pose, warrior III, and eagle pose all improve balance.",
+          "instructions": "Hold each pose for 30 seconds, focus on a fixed point to help maintain balance."
+        },
+        {
+          "title": "Stability Ball Sits",
+          "description": "Engages core muscles while challenging balance.",
+          "instructions": "Sit on a stability ball with feet flat on the floor, gradually lift feet off the ground as stability improves."
+        }
+      ];
+    });
   }
 
   @override

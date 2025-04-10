@@ -1,6 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
 
 class UnderstandingMuscleStrainsScreen extends StatefulWidget {
   const UnderstandingMuscleStrainsScreen({super.key});
@@ -12,28 +13,24 @@ class UnderstandingMuscleStrainsScreen extends StatefulWidget {
 
 class _UnderstandingMuscleStrainsScreenState
     extends State<UnderstandingMuscleStrainsScreen> {
-  List<dynamic> _strains = [];
+  final List<dynamic> _strains = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchStrains();
-  }
 
-  Future<void> fetchStrains() async {
-    final uri = Uri.parse(
-        "http://192.168.8.140:5000/api/strains"); // Use your IP for real device
-    final response = await http.get(uri);
 
-    if (response.statusCode == 200) {
-      setState(() {
-        _strains = json.decode(response.body);
-      });
-    } else {
+  //Future<void> fetchStrains() async {
+  //  final uri = Uri.parse(
+  //      "http://192.168.8.140:5000/api/strains"); // Use your IP for real device
+  //  final response = await http.get(uri);
+//
+  //  if (response.statusCode == 200) {
+ //     setState(() {
+ //       _strains = json.decode(response.body);
+ //     });
+ //   } else {
       // Handle error
-      print("Failed to fetch data");
-    }
-  }
+ //     print("Failed to fetch data");
+ //   }
+ // }
 
   @override
   Widget build(BuildContext context) {

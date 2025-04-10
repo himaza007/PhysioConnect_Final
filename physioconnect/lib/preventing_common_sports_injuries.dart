@@ -1,8 +1,6 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class PreventingCommonSportsInjuriesScreen extends StatefulWidget {
   const PreventingCommonSportsInjuriesScreen({super.key});
@@ -14,27 +12,22 @@ class PreventingCommonSportsInjuriesScreen extends StatefulWidget {
 
 class _PreventingCommonSportsInjuriesScreenState
     extends State<PreventingCommonSportsInjuriesScreen> {
-  List<dynamic> _preventions = [];
+  final List<dynamic> _preventions = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchPreventionTips();
-  }
 
-  Future<void> fetchPreventionTips() async {
-    final uri = Uri.parse(
-        "http://192.168.8.140:5000/api/sports-injury-prevention"); // Replace with IP if on real device
-    final response = await http.get(uri);
+  //Future<void> fetchPreventionTips() async {
+  //final uri = Uri.parse(
+   //     "http://192.168.8.140:5000/api/sports-injury-prevention"); // Replace with IP if on real device
+   // final response = await http.get(uri);
 
-    if (response.statusCode == 200) {
-      setState(() {
-        _preventions = json.decode(response.body);
-      });
-    } else {
-      print("Failed to fetch injury prevention tips");
-    }
-  }
+   // if (response.statusCode == 200) {
+    //  setState(() {
+    //    _preventions = json.decode(response.body);
+   //   });
+   // } else {
+   //   print("Failed to fetch injury prevention tips");
+   // }
+  //}
 
   @override
   Widget build(BuildContext context) {

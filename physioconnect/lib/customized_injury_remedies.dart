@@ -1,6 +1,8 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 
 class CustomizedInjuryRemediesScreen extends StatefulWidget {
   const CustomizedInjuryRemediesScreen({super.key});
@@ -12,80 +14,78 @@ class CustomizedInjuryRemediesScreen extends StatefulWidget {
 
 class _CustomizedInjuryRemediesScreenState
     extends State<CustomizedInjuryRemediesScreen> {
-  List remedies = [];
+  List remedies = [
+    {'id': 1, 'title': 'Cold Therapy', 'description': 'Reduces inflammation and pain for acute injuries'},
+    {'id': 2, 'title': 'Heat Therapy', 'description': 'Improves blood flow and reduces stiffness in chronic conditions'},
+    {'id': 3, 'title': 'Compression Techniques', 'description': 'Controls swelling and provides support for injured areas'},
+    {'id': 4, 'title': 'Elevation Methods', 'description': 'Reduces swelling by improving drainage from injured tissues'},
+    {'id': 5, 'title': 'Gentle Stretching', 'description': 'Maintains flexibility and prevents stiffness during recovery'}
+  ];
 
   @override
   void initState() {
     super.initState();
-    fetchRemedies();
-  }
-
-  Future<void> fetchRemedies() async {
-    final response = await http
-        .get(Uri.parse('http://192.168.8.140:5000/api/custom-remedies'));
-    if (response.statusCode == 200) {
-      setState(() {
-        remedies = json.decode(response.body);
-      });
-    }
+    // Removed HTTP call and using mock data instead
   }
 
   void _handleRemedyTap(int remedyId, String remedyTitle) async {
-    final response = await http.get(
-        Uri.parse('http://192.168.8.140:5000/api/muscle-groups/$remedyId'));
-    if (response.statusCode == 200) {
-      List groups = json.decode(response.body);
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(remedyTitle),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: groups.map((group) {
-              return ListTile(
-                leading:
-                    const Icon(Icons.chevron_right, color: Color(0xFF33724B)),
-                title: Text(group['name']),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _showInstructions(group['id'], group['name']);
-                },
-              );
-            }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Close"),
-            )
-          ],
+    // Mock data instead of HTTP request
+    List groups = [
+      {'id': 1, 'name': 'Upper Back'},
+      {'id': 2, 'name': 'Lower Back'},
+      {'id': 3, 'name': 'Shoulders'}
+    ];
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(remedyTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: groups.map((group) {
+            return ListTile(
+              leading:
+                  const Icon(Icons.chevron_right, color: Color(0xFF33724B)),
+              title: Text(group['name']),
+              onTap: () {
+                Navigator.of(context).pop();
+                _showInstructions(group['id'], group['name']);
+              },
+            );
+          }).toList(),
         ),
-      );
-    }
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          )
+        ],
+      ),
+    );
   }
 
   void _showInstructions(int muscleGroupId, String name) async {
-    final response = await http.get(Uri.parse(
-        'http://192.168.8.140:5000/api/remedy-details/$muscleGroupId'));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Instructions for $name"),
-          content: Text(
-            data['instructions'] ?? 'No instructions found.',
-            style: const TextStyle(fontSize: 15),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Close"),
-            )
-          ],
+    // Mock data instead of HTTP request
+    final data = {
+      'instructions': 'Apply gentle stretching exercises for 15 minutes twice daily. Start with seated forward bends, followed by gentle twists. Avoid sudden movements and stop if pain increases.'
+    };
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Instructions for $name"),
+        content: Text(
+          data['instructions'] ?? 'No instructions found.',
+          style: const TextStyle(fontSize: 15),
         ),
-      );
-    }
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _buildRemedyCard(
@@ -155,7 +155,7 @@ class _CustomizedInjuryRemediesScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "These remedies consider factors such as the user's type of injury, acuteness, wounded area, and the progress in healing to provide personalized treatment plans or exercises tailored to an individual’s recovery needs. Below are the key remedies users can access:",
+                    "These remedies consider factors such as the user's type of injury, acuteness, wounded area, and the progress in healing to provide personalized treatment plans or exercises tailored to an individual's recovery needs. Below are the key remedies users can access:",
                     style: TextStyle(fontSize: 15, color: Colors.black87),
                   ),
                   const SizedBox(height: 15),

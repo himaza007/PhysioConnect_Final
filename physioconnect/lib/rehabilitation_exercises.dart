@@ -1,8 +1,7 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
 
 class RehabilitationExercisesScreen extends StatefulWidget {
   const RehabilitationExercisesScreen({super.key});
@@ -14,27 +13,23 @@ class RehabilitationExercisesScreen extends StatefulWidget {
 
 class _RehabilitationExercisesScreenState
     extends State<RehabilitationExercisesScreen> {
-  List<dynamic> _exercises = [];
+  final List<dynamic> _exercises = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchExercises();
-  }
 
-  Future<void> fetchExercises() async {
-    final uri = Uri.parse(
-        "http://192.168.8.140:5000/api/rehabilitation-exercises"); // Replace localhost with IP for real device
-    final response = await http.get(uri);
 
-    if (response.statusCode == 200) {
-      setState(() {
-        _exercises = json.decode(response.body);
-      });
-    } else {
-      print("Failed to fetch rehabilitation exercises");
-    }
-  }
+  //Future<void> fetchExercises() async {
+  // final uri = Uri.parse(
+  //      "http://192.168.8.140:5000/api/rehabilitation-exercises"); // Replace localhost with IP for real device
+  //  final response = await http.get(uri);
+//
+  //  if (response.statusCode == 200) {
+  //    setState(() {
+   //     _exercises = json.decode(response.body);
+  //    });
+  //  } else {
+  //    print("Failed to fetch rehabilitation exercises");
+  //  }
+ // }
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,25 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'bottom_app_bar.dart';
 
-class PainLevelDetailPage extends StatelessWidget {
+class PainLevelDetailPage extends StatefulWidget {
   const PainLevelDetailPage({super.key});
+
+  @override
+  _PainLevelDetailPageState createState() => _PainLevelDetailPageState();
+}
+
+class _PainLevelDetailPageState extends State<PainLevelDetailPage> {
+  int _currentNavIndex = 0; // For bottom navigation bar
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _currentNavIndex = index;
+    });
+    // Add navigation logic here if needed
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +29,25 @@ class PainLevelDetailPage extends StatelessWidget {
         title: const Text('Pain Level History'),
         backgroundColor: const Color(0xFF1E1E1E),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPainLevelOverviewCard(),
-            const SizedBox(height: 20),
-            _buildPainLevelChart(),
-            const SizedBox(height: 20),
-            _buildPainInterventionSection(),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              _buildPainLevelOverviewCard(),
+              const SizedBox(height: 20),
+              _buildPainLevelChart(),
+              const SizedBox(height: 20),
+              _buildPainInterventionSection(),
+              // Add extra padding at the bottom to prevent content from being hidden by bottom app bar
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }
@@ -115,38 +137,41 @@ class PainLevelDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            SfCartesianChart(
-              plotAreaBorderWidth: 0,
-              primaryXAxis: CategoryAxis(
-                labelStyle: const TextStyle(color: Colors.white70),
-                axisLine: const AxisLine(width: 0),
-                majorGridLines: const MajorGridLines(width: 0),
-              ),
-              primaryYAxis: NumericAxis(
-                labelStyle: const TextStyle(color: Colors.white70),
-                axisLine: const AxisLine(width: 0),
-                minimum: 0,
-                maximum: 10,
-                interval: 2,
-                majorGridLines: const MajorGridLines(
-                  color: Colors.white12,
-                  dashArray: [5, 5],
+            SizedBox(
+              height: 250, // Fixed height to prevent overflow
+              child: SfCartesianChart(
+                plotAreaBorderWidth: 0,
+                primaryXAxis: CategoryAxis(
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  axisLine: const AxisLine(width: 0),
+                  majorGridLines: const MajorGridLines(width: 0),
                 ),
-              ),
-              series: <CartesianSeries<PainData, String>>[
-                LineSeries<PainData, String>(
-                  dataSource: painData,
-                  xValueMapper: (PainData pain, _) => pain.week,
-                  yValueMapper: (PainData pain, _) => pain.level,
-                  color: Colors.orange,
-                  width: 3,
-                  markerSettings: const MarkerSettings(
-                    isVisible: true,
-                    color: Colors.white,
-                    borderColor: Colors.orange,
+                primaryYAxis: NumericAxis(
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  axisLine: const AxisLine(width: 0),
+                  minimum: 0,
+                  maximum: 10,
+                  interval: 2,
+                  majorGridLines: const MajorGridLines(
+                    color: Colors.white12,
+                    dashArray: [5, 5],
                   ),
                 ),
-              ],
+                series: <CartesianSeries<PainData, String>>[
+                  LineSeries<PainData, String>(
+                    dataSource: painData,
+                    xValueMapper: (PainData pain, _) => pain.week,
+                    yValueMapper: (PainData pain, _) => pain.level,
+                    color: Colors.orange,
+                    width: 3,
+                    markerSettings: const MarkerSettings(
+                      isVisible: true,
+                      color: Colors.white,
+                      borderColor: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -236,8 +261,22 @@ class PainLevelDetailPage extends StatelessWidget {
   }
 }
 
-class MobilityDetailPage extends StatelessWidget {
+class MobilityDetailPage extends StatefulWidget {
   const MobilityDetailPage({super.key});
+
+  @override
+  _MobilityDetailPageState createState() => _MobilityDetailPageState();
+}
+
+class _MobilityDetailPageState extends State<MobilityDetailPage> {
+  int _currentNavIndex = 0; // For bottom navigation bar
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _currentNavIndex = index;
+    });
+    // Add navigation logic here if needed
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,18 +286,25 @@ class MobilityDetailPage extends StatelessWidget {
         title: const Text('Mobility Progress'),
         backgroundColor: const Color(0xFF1E1E1E),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildMobilityOverviewCard(),
-            const SizedBox(height: 20),
-            _buildMobilityChart(),
-            const SizedBox(height: 20),
-            _buildMobilityExercisesSection(),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              _buildMobilityOverviewCard(),
+              const SizedBox(height: 20),
+              _buildMobilityChart(),
+              const SizedBox(height: 20),
+              _buildMobilityExercisesSection(),
+              // Add extra padding at the bottom to prevent content from being hidden by bottom app bar
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }
@@ -348,41 +394,44 @@ class MobilityDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            SfCartesianChart(
-              plotAreaBorderWidth: 0,
-              primaryXAxis: CategoryAxis(
-                labelStyle: const TextStyle(color: Colors.white70),
-                axisLine: const AxisLine(width: 0),
-                majorGridLines: const MajorGridLines(width: 0),
-              ),
-              primaryYAxis: NumericAxis(
-                labelStyle: const TextStyle(color: Colors.white70),
-                axisLine: const AxisLine(width: 0),
-                minimum: 0,
-                maximum: 100,
-                interval: 20,
-                majorGridLines: const MajorGridLines(
-                  color: Colors.white12,
-                  dashArray: [5, 5],
+            SizedBox(
+              height: 250, // Fixed height to prevent overflow
+              child: SfCartesianChart(
+                plotAreaBorderWidth: 0,
+                primaryXAxis: CategoryAxis(
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  axisLine: const AxisLine(width: 0),
+                  majorGridLines: const MajorGridLines(width: 0),
                 ),
-              ),
-              series: <CartesianSeries<MobilityData, String>>[
-                AreaSeries<MobilityData, String>(
-                  dataSource: mobilityData,
-                  xValueMapper: (MobilityData mobility, _) => mobility.week,
-                  yValueMapper: (MobilityData mobility, _) => mobility.percentage,
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.blue.withOpacity(0.7),
-                      Colors.blue.withOpacity(0.2),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                primaryYAxis: NumericAxis(
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  axisLine: const AxisLine(width: 0),
+                  minimum: 0,
+                  maximum: 100,
+                  interval: 20,
+                  majorGridLines: const MajorGridLines(
+                    color: Colors.white12,
+                    dashArray: [5, 5],
                   ),
-                  borderColor: Colors.blue,
-                  borderWidth: 3,
                 ),
-              ],
+                series: <CartesianSeries<MobilityData, String>>[
+                  AreaSeries<MobilityData, String>(
+                    dataSource: mobilityData,
+                    xValueMapper: (MobilityData mobility, _) => mobility.week,
+                    yValueMapper: (MobilityData mobility, _) => mobility.percentage,
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blue.withOpacity(0.7),
+                        Colors.blue.withOpacity(0.2),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderColor: Colors.blue,
+                    borderWidth: 3,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -472,8 +521,22 @@ class MobilityDetailPage extends StatelessWidget {
   }
 }
 
-class StrengthDetailPage extends StatelessWidget {
+class StrengthDetailPage extends StatefulWidget {
   const StrengthDetailPage({super.key});
+
+  @override
+  _StrengthDetailPageState createState() => _StrengthDetailPageState();
+}
+
+class _StrengthDetailPageState extends State<StrengthDetailPage> {
+  int _currentNavIndex = 0; // For bottom navigation bar
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _currentNavIndex = index;
+    });
+    // Add navigation logic here if needed
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -483,18 +546,25 @@ class StrengthDetailPage extends StatelessWidget {
         title: const Text('Strength Progress'),
         backgroundColor: const Color(0xFF1E1E1E),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildStrengthOverviewCard(),
-            const SizedBox(height: 20),
-            _buildStrengthChart(),
-            const SizedBox(height: 20),
-            _buildStrengthTrainingSection(),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              _buildStrengthOverviewCard(),
+              const SizedBox(height: 20),
+              _buildStrengthChart(),
+              const SizedBox(height: 20),
+              _buildStrengthTrainingSection(),
+              // Add extra padding at the bottom to prevent content from being hidden by bottom app bar
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }
@@ -584,33 +654,36 @@ class StrengthDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            SfCartesianChart(
-              plotAreaBorderWidth: 0,
-              primaryXAxis: CategoryAxis(
-                labelStyle: const TextStyle(color: Colors.white70),
-                axisLine: const AxisLine(width: 0),
-                majorGridLines: const MajorGridLines(width: 0),
-              ),
-              primaryYAxis: NumericAxis(
-                labelStyle: const TextStyle(color: Colors.white70),
-                axisLine: const AxisLine(width: 0),
-                minimum: 0,
-                maximum: 100,
-                interval: 20,
-                majorGridLines: const MajorGridLines(
-                  color: Colors.white12,
-                  dashArray: [5, 5],
+            SizedBox(
+              height: 250, // Fixed height to prevent overflow
+              child: SfCartesianChart(
+                plotAreaBorderWidth: 0,
+                primaryXAxis: CategoryAxis(
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  axisLine: const AxisLine(width: 0),
+                  majorGridLines: const MajorGridLines(width: 0),
                 ),
-              ),
-              series: <CartesianSeries<StrengthData, String>>[
-                ColumnSeries<StrengthData, String>(
-                  dataSource: strengthData,
-                  xValueMapper: (StrengthData strength, _) => strength.week,
-                  yValueMapper: (StrengthData strength, _) => strength.percentage,
-                  color: Colors.green,
-                  width: 0.6,
+                primaryYAxis: NumericAxis(
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  axisLine: const AxisLine(width: 0),
+                  minimum: 0,
+                  maximum: 100,
+                  interval: 20,
+                  majorGridLines: const MajorGridLines(
+                    color: Colors.white12,
+                    dashArray: [5, 5],
+                  ),
                 ),
-              ],
+                series: <CartesianSeries<StrengthData, String>>[
+                  ColumnSeries<StrengthData, String>(
+                    dataSource: strengthData,
+                    xValueMapper: (StrengthData strength, _) => strength.week,
+                    yValueMapper: (StrengthData strength, _) => strength.percentage,
+                    color: Colors.green,
+                    width: 0.6,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

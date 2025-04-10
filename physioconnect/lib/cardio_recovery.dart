@@ -1,6 +1,6 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class CardioRecoveryScreen extends StatefulWidget {
   const CardioRecoveryScreen({super.key});
@@ -11,6 +11,8 @@ class CardioRecoveryScreen extends StatefulWidget {
 
 class _CardioRecoveryScreenState extends State<CardioRecoveryScreen> {
   List<dynamic> workouts = [];
+  
+  bool? get kDebugMode => null;
 
   @override
   void initState() {
@@ -19,20 +21,7 @@ class _CardioRecoveryScreenState extends State<CardioRecoveryScreen> {
   }
 
   Future<void> fetchCardioWorkouts() async {
-    final uri = Uri.parse('http://localhost:5000/api/cardio-workouts'); // Replace with actual IP on real device
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          workouts = data;
-        });
-      } else {
-        print("Failed to load cardio workouts: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching cardio workouts: $e");
-    }
+    Uri.parse('http://localhost:5000/api/cardio-workouts'); // Replace with actual IP on real device
   }
 
   @override
