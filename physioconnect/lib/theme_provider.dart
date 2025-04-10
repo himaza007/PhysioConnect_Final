@@ -1,88 +1,98 @@
+// ignore_for_file: deprecated_member_use, duplicate_ignore
+
 import 'package:flutter/material.dart';
 
-class ThemeProvider extends ChangeNotifier {
-  ThemeData _currentTheme = _lightTheme;
-
-  // Brand Colors
+class AppTheme {
+  // Define color constants
   static const Color primaryTeal = Color(0xFF33724B);
-  static const Color lightBackground = Color(0xFFEAF7FF);
-  static const Color darkBackground = Color(0xFF121212);
-  static const Color selectedCategoryColor = Color(0xFF1F6662);
+  static const Color aliceBlue = Color(0xFFEAF7FF);
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color darkBackground = Color(0xFF06130D);
 
-  // Shared Extensions
-  static const Color cardBackgroundLight = Colors.white;
-  static const Color cardBackgroundDark = Color(0xFF1E1E1E);
-  static const Color shadowLight = Colors.black12;
-  static const Color shadowDark = Colors.black54;
-
-  static final ThemeData _lightTheme = ThemeData(
+  static final ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: darkBackground,
     primaryColor: primaryTeal,
-    scaffoldBackgroundColor: lightBackground,
-    brightness: Brightness.light,
-    appBarTheme: const AppBarTheme(
+    colorScheme: ColorScheme.dark(
+      primary: primaryTeal,
+      secondary: aliceBlue,
+      // ignore: deprecated_member_use
+      background: darkBackground,
+    ),
+    appBarTheme: AppBarTheme(
       backgroundColor: primaryTeal,
-      elevation: 5,
-      centerTitle: true,
-      titleTextStyle: TextStyle(
+      elevation: 0,
+      iconTheme: const IconThemeData(color: white),
+      titleTextStyle: const TextStyle(
+        color: white,
         fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.5,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryTeal,
-        foregroundColor: Colors.white,
-        textStyle: const TextStyle(fontWeight: FontWeight.w600),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        foregroundColor: white,
+        elevation: 4,
+        shadowColor: primaryTeal.withOpacity(0.4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        textStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.5,
+        ),
       ),
     ),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.black87),
+    textTheme: TextTheme(
+      bodyMedium: TextStyle(
+        color: white.withOpacity(0.9),
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+      titleMedium: const TextStyle(
+        color: white,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
+      ),
     ),
-    iconTheme: const IconThemeData(color: primaryTeal),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return primaryTeal;
+        }
+        return Colors.transparent;
+      }),
+      checkColor: MaterialStateProperty.all(white),
+      side: BorderSide(color: white.withOpacity(0.7), width: 2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+    ),
+    cardTheme: CardTheme(
+      color: primaryTeal.withOpacity(0.2),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: primaryTeal.withOpacity(0.3), width: 1),
+      ),
+    ),
   );
 
-  static final ThemeData _darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: Colors.teal.shade300,
-    scaffoldBackgroundColor: darkBackground,
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey.shade900,
-      elevation: 5,
-      centerTitle: true,
-      titleTextStyle: const TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+  static final ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: aliceBlue,
+    primaryColor: primaryTeal,
+    colorScheme: ColorScheme.light(
+      primary: primaryTeal,
+      secondary: primaryTeal.withOpacity(0.1),
+      background: aliceBlue,
     ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.teal.shade400,
-        foregroundColor: Colors.white,
-        textStyle: const TextStyle(fontWeight: FontWeight.w600),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    ),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white70),
-    ),
-    iconTheme: const IconThemeData(color: Colors.tealAccent),
+    // Rest of the theme configuration similar to dark theme
+    // Customize with lighter colors and softer contrasts
   );
-
-  ThemeData get currentTheme => _currentTheme;
-
-  void toggleTheme() {
-    _currentTheme = _currentTheme == _lightTheme ? _darkTheme : _lightTheme;
-    notifyListeners();
-  }
-
-  // ✅ Extension Colors
-  Color get categoryHighlight => selectedCategoryColor;
-  Color get cardBackground => _currentTheme.brightness == Brightness.dark
-      ? cardBackgroundDark
-      : cardBackgroundLight;
-  Color get shadowColor =>
-      _currentTheme.brightness == Brightness.dark ? shadowDark : shadowLight;
 }
