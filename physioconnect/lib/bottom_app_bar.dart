@@ -1,9 +1,4 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'sos_button.dart';
 
 class PhysioBottomAppBar extends StatelessWidget {
   final int currentIndex;
@@ -17,29 +12,6 @@ class PhysioBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample emergency contacts - in a real app, these would come from a database or user profile
-    final List<EmergencyContact> contacts = [
-      EmergencyContact(
-        id: '1',
-        name: 'John Doe (Family)',
-        phoneNumber: '+1234567890',
-        notes: 'Primary emergency contact',
-      ),
-      EmergencyContact(
-        id: '2',
-        name: 'Dr. Smith',
-        phoneNumber: '+1987654321',
-        contactType: ContactType.hospital,
-        notes: 'Primary care physician',
-      ),
-      EmergencyContact(
-        id: '3',
-        name: 'Local Hospital',
-        phoneNumber: '+1122334455',
-        contactType: ContactType.hospital,
-      ),
-    ];
-
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -71,11 +43,17 @@ class PhysioBottomAppBar extends StatelessWidget {
               ),
               _buildNavItem(
                 context: context,
-                icon: Icons.notifications_rounded,
-                label: 'Notifications',
+                icon: Icons.monitor_heart_rounded,
+                label: 'Pain',
                 index: 2,
               ),
-              _buildSOSButton(context, contacts),
+              _buildNavItem(
+                context: context,
+                icon: Icons.medical_services_rounded,
+                label: 'First Aid',
+                index: 3,
+              ),
+              _buildSOSButton(context),
             ],
           ),
         ),
@@ -90,16 +68,16 @@ class PhysioBottomAppBar extends StatelessWidget {
     required int index,
   }) {
     final bool isSelected = currentIndex == index;
-    
+
     return InkWell(
       onTap: () => onTap(index),
       borderRadius: BorderRadius.circular(16),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFF33724B).withOpacity(0.1) 
+          color: isSelected
+              ? const Color(0xFF33724B).withOpacity(0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
@@ -108,19 +86,17 @@ class PhysioBottomAppBar extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected 
-                  ? const Color(0xFF33724B)
-                  : Colors.grey.shade600,
-              size: 24,
+              color:
+                  isSelected ? const Color(0xFF33724B) : Colors.grey.shade600,
+              size: 22,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: isSelected 
-                    ? const Color(0xFF33724B)
-                    : Colors.grey.shade600,
-                fontSize: 12,
+                color:
+                    isSelected ? const Color(0xFF33724B) : Colors.grey.shade600,
+                fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -130,24 +106,19 @@ class PhysioBottomAppBar extends StatelessWidget {
     );
   }
 
-  Widget _buildSOSButton(BuildContext context, List<EmergencyContact> contacts) {
+  Widget _buildSOSButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _showEnhancedSOSDialog(context, contacts);
-        HapticFeedback.mediumImpact(); // Add haptic feedback when SOS is tapped
+        _showSOSDialog(context);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.red.shade400, Colors.red.shade700],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Colors.red.shade50,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.red.withOpacity(0.3),
+              color: Colors.red.withOpacity(0.2),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -158,15 +129,15 @@ class PhysioBottomAppBar extends StatelessWidget {
           children: [
             Icon(
               Icons.emergency_rounded,
-              color: Colors.white,
-              size: 24,
+              color: Colors.red.shade700,
+              size: 22,
             ),
             const SizedBox(height: 4),
             Text(
               'SOS',
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
+                color: Colors.red.shade700,
+                fontSize: 11,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -176,89 +147,76 @@ class PhysioBottomAppBar extends StatelessWidget {
     );
   }
 
-  void _showEnhancedSOSDialog(BuildContext context, List<EmergencyContact> contacts) {
+  void _showSOSDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissal by tapping outside
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.red.shade50,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.emergency_rounded,
-                  color: Colors.red.shade700,
-                  size: 28,
+          title: Row(
+            children: [
+              Icon(
+                Icons.emergency_rounded,
+                color: Colors.red.shade700,
+                size: 28,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Emergency SOS',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Emergency SOS',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
                 'Are you experiencing a medical emergency?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Choose an option below:',
-                style: TextStyle(fontSize: 14),
-                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 24),
-              _buildEmergencyButton(
-                context: context,
-                icon: Icons.phone_rounded,
-                label: 'Call 119 Now',
-                color: Colors.red.shade700,
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  HapticFeedback.heavyImpact(); // Strong haptic feedback
-                  
-                  // Direct call to emergency services
-                  final Uri phoneUri = Uri(scheme: 'tel', path: '119');
-                  try {
-                    if (await canLaunchUrl(phoneUri)) {
-                      await launchUrl(phoneUri);
-                    } else {
-                      _showErrorSnackBar(context, 'Could not launch emergency call');
-                    }
-                  } catch (e) {
-                    _showErrorSnackBar(context, 'Error: $e');
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildEmergencyButton(
-                context: context,
-                icon: Icons.contact_emergency_rounded,
-                label: 'Contact Emergency List',
-                color: Colors.orange.shade700,
-                onTap: () {
-                  Navigator.of(context).pop();
-                  HapticFeedback.mediumImpact();
-                  
-                  // Show the SOS floating button with expanded contacts
-                  _activateSOSInterface(context, contacts);
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildEmergencyAction(
+                    context: context,
+                    icon: Icons.phone_rounded,
+                    label: 'Call 911',
+                    color: Colors.red.shade700,
+                    onTap: () {
+                      // Implement emergency call functionality
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Emergency call feature would be triggered here'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  ),
+                  _buildEmergencyAction(
+                    context: context,
+                    icon: Icons.message_rounded,
+                    label: 'Alert Contact',
+                    color: Colors.orange.shade700,
+                    onTap: () {
+                      // Implement emergency contact alert
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Emergency contact alert would be sent here'),
+                          backgroundColor: Colors.orange,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -269,7 +227,8 @@ class PhysioBottomAppBar extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -282,67 +241,43 @@ class PhysioBottomAppBar extends StatelessWidget {
     );
   }
 
-  void _activateSOSInterface(BuildContext context, List<EmergencyContact> contacts) {
-    // Create an overlay entry for the SOS button
-    OverlayState overlayState = Overlay.of(context);
-    OverlayEntry? overlayEntry;
-    
-    overlayEntry = OverlayEntry(
-      builder: (context) {
-        return SOSFloatingButton(
-          contacts: contacts,
-          onClose: () {
-            // Remove the overlay when closed
-            overlayEntry?.remove();
-          },
-        );
-      },
-    );
-    
-    // Insert the overlay
-    overlayState.insert(overlayEntry);
-  }
-
-  void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-  
-  Widget _buildEmergencyButton({
+  Widget _buildEmergencyAction({
     required BuildContext context,
     required IconData icon,
     required String label,
     required Color color,
     required VoidCallback onTap,
   }) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 100,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: color.withOpacity(0.3),
+            width: 1,
           ),
-          elevation: 4,
         ),
-        icon: Icon(
-          icon,
-          size: 28,
-        ),
-        label: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: 32,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );

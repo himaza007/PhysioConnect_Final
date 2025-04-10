@@ -1,9 +1,6 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'feature_list.dart';
-import 'interactive_human_body.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +12,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late VideoPlayerController _controller;
   bool _isVideoInitialized = false;
-  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -26,24 +22,22 @@ class _HomePageState extends State<HomePage> {
   void _initializeVideo() {
     _controller = VideoPlayerController.asset('assets/videos/vid.mp4')
       ..initialize().then((_) {
-        setState(() {
-          _isVideoInitialized = true;
-        });
-        _controller.setLooping(true);
-        _controller.setVolume(0.0);
-        _controller.play();
+        if (mounted) {
+          setState(() {
+            _isVideoInitialized = true;
+          });
+          _controller.setLooping(true);
+          _controller.setVolume(0.0);
+          _controller.play();
+        }
       }).catchError((error) {
         debugPrint("Error loading video: $error");
-        setState(() {
-          _isVideoInitialized = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isVideoInitialized = false;
+          });
+        }
       });
-  }
-
-  void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
   }
 
   @override
@@ -54,77 +48,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // The background image is now handled by the app coordinator
-    // This page just needs to provide its content
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // App Header with Logo and Title
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 40, 24, 20),
-            child: Row(
-              children: [
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Image.asset(
-                    'assets/images/app_logo.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'PhysioConnect',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28,
-                      ),
-                    ),
-                    Text(
-                      'Empowering Your Recovery',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          
           // Video Section with Enhanced UI
           Container(
             height: 300,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.black87, Colors.black],
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black, Colors.black],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 8),
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
                 ),
               ],
             ),
@@ -133,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: _isVideoInitialized
                       ? ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(20),
                           child: AspectRatio(
                             aspectRatio: _controller.value.aspectRatio,
                             child: VideoPlayer(_controller),
@@ -155,53 +100,73 @@ class _HomePageState extends State<HomePage> {
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E4D33),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      elevation: 8,
-                      shadowColor: Colors.black.withOpacity(0.5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
+                      elevation: 5,
                     ),
                     onPressed: () {
-                      // Navigate to the 2D Body Model
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InteractiveHumanBody(
-                            toggleTheme: _toggleTheme,
-                            isDarkMode: _isDarkMode,
-                          ),
-                        ),
-                      );
+                      Navigator.pushNamed(context, '/body-map');
+                    },
+                  ),
+                ),
+                Positioned(
+                  left: 20,
+                  bottom: 20,
+                  child: IconButton(
+                    icon: Icon(
+                      _controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (_controller.value.isPlaying) {
+                          _controller.pause();
+                        } else {
+                          _controller.play();
+                        }
+                      });
                     },
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 30),
-          
-          // Feature Title
+          const SizedBox(height: 20),
+
+          // Enhanced Feature List
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               "Heal Smart.",
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Color(0xFF33724B),
               ),
               textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 20),
-          
-          // Feature Grid with updated styling
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: FeatureList(),
+            child: Text(
+              "Choose from our comprehensive range of recovery tools and resources designed to support your healing journey.",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
+          const SizedBox(height: 20),
+          const FeatureList(),
+          const SizedBox(height: 30), // Add bottom padding for scrolling
         ],
       ),
     );
