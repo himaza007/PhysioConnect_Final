@@ -7,6 +7,8 @@ import 'video_consultation_screen.dart';
 import 'custom_exercise_plans.dart';
 import 'educational_resources.dart';
 import 'customized_injury_remedies.dart';
+import 'pain_monitoring.dart';
+import 'first_aid_screen.dart';
 
 class FeatureList extends StatelessWidget {
   const FeatureList({super.key});
@@ -94,6 +96,20 @@ class FeatureList extends StatelessWidget {
                   builder: (context) => const CustomizedInjuryRemediesScreen(),
                 ),
               );
+            } else if (index == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PainMonitoringPage(),
+                ),
+              );
+            } else if (index == 7) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FirstAidScreen(),
+                ),
+              );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -103,6 +119,9 @@ class FeatureList extends StatelessWidget {
               );
             }
           },
+
+
+
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
