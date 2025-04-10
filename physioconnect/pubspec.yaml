@@ -134,6 +134,7 @@ flutter:
     - assets/app_logo.png
     - assets/videos/vid.mp4
     - assets/bg.jpg
+    - assets/doctor_icon.jpg
 
 
   fonts:

@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'health_metrics_pages.dart'; 
+import 'bottom_app_bar.dart';
 
 class AdvancedProgressTrackingScreen extends StatefulWidget {
   const AdvancedProgressTrackingScreen({Key? key}) : super(key: key);
@@ -21,41 +22,104 @@ class _AdvancedProgressTrackingScreenState extends State<AdvancedProgressTrackin
     ProgressData("Week 4", 70),
     ProgressData("Week 5", 90),
   ];
+  
+  int _currentNavIndex = 0; // For bottom navigation
+
+  void _onNavItemTapped(int index) {
+    if (index == _currentNavIndex) return;
+    setState(() {
+      _currentNavIndex = index;
+    });
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            // ... (previous app bar code remains the same)
-            SliverPadding(
-              padding: const EdgeInsets.all(16.0),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  // Patient Overview Card
-                  _buildPatientOverviewCard(),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // Advanced Progress Visualization
-                  _buildAdvancedProgressChart(),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // Detailed Health Metrics (Now Clickable)
-                  _buildHealthMetricsSection(),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // Intervention Recommendations
-                  _buildInterventionRecommendations(),
-                ]),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF33724B),
+        title: const Text(
+          "Progress Tracking",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Stack(
+        children: [
+          // Background image
+          Image.asset(
+            'assets/bg.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          // Overlay for better readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.6),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      // Patient Overview Card
+                      _buildPatientOverviewCard(),
+                      
+                      const SizedBox(height: 20),
+                      
+                      // Advanced Progress Visualization
+                      _buildAdvancedProgressChart(),
+                      
+                      const SizedBox(height: 20),
+                      
+                      // Detailed Health Metrics (Now Clickable)
+                      _buildHealthMetricsSection(),
+                      
+                      const SizedBox(height: 20),
+                      
+                      // Intervention Recommendations
+                      _buildInterventionRecommendations(),
+                      
+                      // Extra space at bottom for bottom navigation bar
+                      const SizedBox(height: 80),
+                    ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Quick access SOS button
+          Positioned(
+            right: 20,
+            bottom: 100, // Positioned above bottom bar
+            child: _buildQuickSOSButton(),
+          ),
+        ],
+      ),
+      bottomNavigationBar: PhysioBottomAppBar(
+        currentIndex: _currentNavIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }
@@ -74,7 +138,7 @@ class _AdvancedProgressTrackingScreenState extends State<AdvancedProgressTrackin
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(),
+            color: Colors.black.withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -122,7 +186,7 @@ class _AdvancedProgressTrackingScreenState extends State<AdvancedProgressTrackin
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text(
                     'Intermediate Level • 5 Weeks',
                     style: TextStyle(
                       color: Colors.white70,
@@ -239,21 +303,21 @@ class _AdvancedProgressTrackingScreenState extends State<AdvancedProgressTrackin
                   '4/10', 
                   Colors.orange, 
                   Icons.sentiment_neutral,
-                  PainLevelDetailPage(),
+                  const PainLevelDetailPage(),
                 ),
                 _buildClickableMetricCard(
                   'Mobility', 
                   '75%', 
                   Colors.blue, 
                   Icons.directions_walk,
-                  MobilityDetailPage(),
+                  const MobilityDetailPage(),
                 ),
                 _buildClickableMetricCard(
                   'Strength', 
                   '60%', 
                   Colors.green, 
                   Icons.fitness_center,
-                  StrengthDetailPage(),
+                  const StrengthDetailPage(),
                 ),
               ],
             ),
@@ -389,7 +453,7 @@ class _AdvancedProgressTrackingScreenState extends State<AdvancedProgressTrackin
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 14,
                   ),
@@ -398,6 +462,177 @@ class _AdvancedProgressTrackingScreenState extends State<AdvancedProgressTrackin
             ),
           ),
         ],
+      ),
+    );
+  }
+  
+  Widget _buildQuickSOSButton() {
+    return Container(
+      width: 58,
+      height: 58,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [Colors.red.shade400, Colors.red.shade700],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showEmergencyDialog(),
+          customBorder: const CircleBorder(),
+          child: const Center(
+            child: Icon(
+              Icons.emergency,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showEmergencyDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissal by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.emergency_rounded,
+                  color: Colors.red.shade700,
+                  size: 28,
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Emergency SOS',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Are you experiencing a medical emergency?',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Choose an option below:',
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              _buildEmergencyButton(
+                icon: Icons.phone_rounded,
+                label: 'Call 119 Now',
+                color: Colors.red.shade700,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // In a real app, this would call emergency services
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Calling emergency services...'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildEmergencyButton(
+                icon: Icons.contact_emergency_rounded,
+                label: 'Contact Emergency List',
+                color: Colors.orange.shade700,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // In a real app, this would show emergency contacts
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Opening emergency contacts...'),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey.shade800,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildEmergencyButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 4,
+        ),
+        icon: Icon(
+          icon,
+          size: 28,
+        ),
+        label: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

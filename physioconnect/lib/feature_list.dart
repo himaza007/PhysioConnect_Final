@@ -3,6 +3,10 @@
 import 'package:flutter/material.dart';
 import 'progress_tracking_screen.dart';
 import 'nearby_facilities.dart';
+import 'video_consultation_screen.dart';
+import 'custom_exercise_plans.dart';
+import 'educational_resources.dart';
+import 'customized_injury_remedies.dart';
 
 class FeatureList extends StatelessWidget {
   const FeatureList({super.key});
@@ -60,6 +64,34 @@ class FeatureList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const NearbyFacilitiesScreen(),
+                ),
+              );
+            } else if (index == 5) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const VideoConsultationScreen(),
+                ),
+              );
+            } else if (index == 6) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CustomExercisePlansScreen(),
+                ),
+              );
+            } else if (index == 8) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EducationalResourcesScreen(),
+                ),
+              );
+            } else if (index == 9) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CustomizedInjuryRemediesScreen(),
                 ),
               );
             } else {
